@@ -61,8 +61,18 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
     """Testing config"""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI')
+    DEBUG = False
+    DEVELOPMENT = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI', 'sqlite:///:memory:')
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': False,  # SQLite in-memory doesn't need this
+        'pool_recycle': 3600,
+    }
     UPLOAD_FOLDER = 'tests/test_uploads'
+    # Disable rate limiting for tests
+    RATELIMIT_ENABLED = False
+    # Disable Flask-MailServer during tests (leave email as-is)
+    TESTING_MAIL_SUPPRESS_SEND = False
 
 # Dictionary to map config names to config classes
 config_by_name = {

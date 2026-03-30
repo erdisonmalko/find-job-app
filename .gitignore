@@ -10,6 +10,11 @@ __pycache__
 
 RAILWAY_DEPLOYMENT.md
 PRODUCTION_READY.md
+TESTING.md
+
+# test
+.coverage
+.coveragerc
 
 migrations/
 app/utils/bulk_insert.py

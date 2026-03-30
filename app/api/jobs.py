@@ -237,7 +237,7 @@ def apply_job(job_id):
         return jsonify({"message": "Application submitted successfully"}), 200
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error("Error applying for job:", str(e))
+        current_app.logger.error(f"Error applying for job: {str(e)}")
         return jsonify({"error": "Error applying for job"}), 500
 
     
