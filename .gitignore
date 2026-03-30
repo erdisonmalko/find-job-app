@@ -5,6 +5,12 @@ __pycache__
 *.pyo
 *.log
 .env
+.env.old
+*.env
+
+RAILWAY_DEPLOYMENT.md
+PRODUCTION_READY.md
+
 migrations/
 app/utils/bulk_insert.py
 app/utils/bulk_insert2.py
@@ -14,3 +20,4 @@ app/templates/company/login.html
 app/static/resume_upload/*.pdf
 app/logs
 logs/
+.venv/

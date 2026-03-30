@@ -4,10 +4,38 @@ services:
     container_name: jf_mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-job_finder}
+      MYSQL_USER: ${MYSQL_USER:-jobfinder}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-jobfinderpass}
     ports:
       - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - job_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: jf_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    networks:
+      - job_network
 
   web:
     build: .
@@ -16,10 +44,40 @@ services:
     ports:
       - "5001:5001"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      FLASK_ENV: development
-      FLASK_DEBUG: 1
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-1}
       PYTHONUNBUFFERED: 1
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-job_finder}
+      MYSQL_USER: ${MYSQL_USER:-jobfinder}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-jobfinderpass}
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://${MYSQL_USER:-jobfinder}:${MYSQL_PASSWORD:-jobfinderpass}@db:3306/${MYSQL_DATABASE:-job_finder}?charset=utf8mb4
+      REDIS_URL: redis://redis:6379
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-this}
+      MAIL_SERVER: ${MAIL_SERVER}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USE_TLS: ${MAIL_USE_TLS:-true}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      SECURITY_PASSWORD_SALT: ${SECURITY_PASSWORD_SALT:-dev-salt}
     volumes:
       - .:/jobfind
+      - resume_uploads:/jobfind/app/static/resume_upload
+    networks:
+      - job_network
+
+volumes:
+  mysql_data:
+  redis_data:
+  resume_uploads:
+
+networks:
+  job_network:
+    driver: bridge

@@ -129,7 +129,7 @@
                                                     </td>
                                                     <td>
                                                         {% if application.resume_filename %}
-                                                            <a href="{{ url_for('applications.download_resume', file_name=application.resume_filename) }}" 
+                                                            <a href="{{ url_for('applications.download_resume', application_id=application.id, file_name=application.resume_filename) }}" 
                                                                class="btn btn-sm btn-outline-success">
                                                                 <i class="fas fa-download"></i>
                                                             </a>

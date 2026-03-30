@@ -1,25 +1,31 @@
-# Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /jobfind
 
-# Copy the current directory contents into the container at /app
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    FLASK_ENV=production
+
+# Install system dependencies (minimal)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    gcc && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better layer caching
+COPY app/requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
 COPY . /jobfind
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r app/requirements.txt
-
-# Install watchdog for auto-reloading
-RUN pip install watchdog
-
+# Expose port
 EXPOSE 5001
 
-# Define environment variables
-ENV FLASK_APP=main.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_DEBUG=1
-ENV FLASK_RUN_PORT=5001
-
-# Run flask when the container launches 
-CMD ["flask","--app=main.py", "run", "--debug", "--host=0.0.0.0"]
+# Run with gunicorn (production)
+CMD ["gunicorn", "-k", "eventlet", "-w", "1", "main:app", "--bind", "0.0.0.0:${PORT:-5001}", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]

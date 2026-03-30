@@ -46,7 +46,8 @@
                                 <i class="fas fa-download me-1"></i>Download Resume
                             </a>
                             <div id="urlData" style="display: none;"
-                                data-download-resume-url="{{ url_for('applications.download_resume', file_name='FILENAME_PLACEHOLDER') }}">
+                                data-application-id=""
+                                data-download-resume-url="{{ url_for('applications.download_resume', application_id='APPLICATION_ID_PLACEHOLDER', file_name='FILENAME_PLACEHOLDER') }}">
                             </div>
                         </p>
                     </div>
@@ -199,10 +200,12 @@
         const resumeLink = document.getElementById('resumeLink');
         
         if (data.resume_filename) {
-            // Get URL template from the data attribute and replace placeholder
+            // Get URL template from the data attribute and replace placeholders
             const urlTemplate = document.getElementById('urlData')
                 .getAttribute('data-download-resume-url');
-            const downloadUrl = urlTemplate.replace('FILENAME_PLACEHOLDER', data.resume_filename);
+            const downloadUrl = urlTemplate
+                .replace('APPLICATION_ID_PLACEHOLDER', data.id)
+                .replace('FILENAME_PLACEHOLDER', data.resume_filename);
             
             resumeLink.href = downloadUrl;
             resumeLink.textContent = data.resume_filename;

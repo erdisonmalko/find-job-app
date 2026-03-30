@@ -55,10 +55,14 @@ def delete_application():
 
 
 
-@applications_bp.route("/application/download_resume/<string:file_name>", methods=["GET"])
+@applications_bp.route("/application/<int:application_id>/download_resume/<string:file_name>", methods=["GET"])
 @limiter.limit("5 per minute")
 @login_required
-def download_resume(file_name):
+def download_resume(application_id, file_name):
+    # Check if the application exists and belongs to the current user ONLY FOR PERSON
+    application = JobApplication.query.filter_by(id=application_id, applicant_id=current_user.id).first()
+    if not application:
+        return render_template("errors/404.html"), 404
     if file_name and allowed_file(file_name):
         original_filename = secure_filename(file_name)
         current_app.logger.info(f"Downloading resume: {original_filename} for user: {current_user.name}...")

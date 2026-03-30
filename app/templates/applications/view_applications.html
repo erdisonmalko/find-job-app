@@ -85,7 +85,7 @@
                                     {% if application.resume_filename %}
                                         <p>
                                             <i class="fas fa-file-pdf me-2 text-success"></i>
-                                            <a href="{{ url_for('applications.download_resume', file_name=application.resume_filename) }}" class="text-success">
+                                            <a href="{{ url_for('applications.download_resume', application_id=application.id, file_name=application.resume_filename) }}" class="text-success">
                                                 {{ application.resume_filename }}
                                             </a>
                                         </p>
