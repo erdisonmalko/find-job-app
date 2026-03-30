@@ -1,41 +1,109 @@
-# JobFind
+# Find-Job-App
 
-JobFind is a web application designed to facilitate job searching and networking. It provides features for job listings, direct messaging, notifications, and user profiles.
+A full-stack job marketplace platform with real-time messaging and application management. Built with Flask, SQLAlchemy, WebSockets, and Docker.
 
-## Table of Contents
+Live Demo: [https://your-railway-url.railway.app](https://your-railway-url.railway.app)
 
-- [Installation](#installation)
-- [Usage](#usage)
+## Overview
 
+Find-Job-App serves two user types: Job Seekers and Companies. The platform facilitates job discovery, applications, and direct communication between candidates and recruiters.
 
-## Installation
+## Core Features
 
-To set up the project locally using Docker, follow these steps:
+**Job Management**
+- Browse and filter job listings by title, location, and salary
+- Companies post and manage job listings
+- Toggle job active/inactive status
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/erdisonmalko/find-job-app.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd JobFind
-   ```
-3. Build and start the Docker containers:
-   ```bash
-   docker-compose up -d
-   ```
-   This command will build the Docker images and start the containers in detached mode.
+**Job Applications**
+- Job seekers apply to positions with resume uploads
+- Companies review applications and download resumes
+- Application status tracking (pending, accepted, rejected, under_review)
+- Real-time notifications on status changes
 
-4. Access the application:
-   - The web application will be available at `http://localhost:5001`.
+**Direct Messaging**
+- Create chat rooms between users
+- Real-time WebSocket-based messaging
+- User search for initiating conversations
 
-## Usage
+**User Profiles**
+- Job seekers showcase professional experience and skills
+- Companies display company information and social links
+- View other users' profiles
 
-To stop the application, use the following command:
+**Notifications**
+- Real-time alerts via WebSocket (Socket.IO)
+- Mark notifications as read/delete
+- Application status updates and job application alerts
+
+## Technology Stack
+
+Backend: Flask, Flask-SQLAlchemy, Flask-SocketIO
+Database: MySQL 8.0, Redis 7
+Server: Gunicorn with Eventlet
+Frontend: Jinja2, Bootstrap 5, JavaScript
+Deployment: Docker, Railway
+
+## Quick Start (Local)
 
 ```bash
-docker-compose down
+# Clone repository
+git clone ...
+cd find-job-app
+
+# Copy environment template
+cp .env.example .env
+
+# Start with Docker Compose
+docker-compose up
+
+# Or with Makefile commands
+make build
+
+# Access at http://localhost:5001
 ```
 
-This command will stop and remove the containers.
+To stop: `docker-compose down` or `make down`
+
+## Architecture
+
+- **User Model**: Polymorphic inheritance (User -> Person/Company)
+- **Database**: Connection pooling, auto table creation with retry logic
+- **Real-time**: Redis message queue for WebSocket scalability
+- **Rate Limiting**: Redis-backed rate limiter (development uses in-memory)
+- **Security**: Role-based access control, password hashing, secure file handling
+
+## API Endpoints
+
+**Jobs**: POST/GET /job/create, /job/info, /job/update, /job/apply, /job/deactivate
+**Applications**: GET/POST /application/list, /application/detail, /application/download_resume, /application/update_status
+**Messaging**: POST/GET /room/new, /room/join, /search_users
+**Notifications**: POST /notification/mark_read, /notification/delete
+
+## Environment Variables
+
+Required variables (see .env.example):
+- FLASK_ENV, SECRET_KEY
+- SQLALCHEMY_DATABASE_URI
+- REDIS_URL
+- MAIL_SERVER, MAIL_USERNAME, MAIL_PASSWORD
+
+## Directory Structure
+
+```
+app/
+  api/              # API blueprints (jobs, applications, etc.)
+  config/           # Configuration (dev/prod/test)
+  models.py         # SQLAlchemy models
+  extensions.py     # Flask extensions
+  utils/            # Helpers (logging, validation, file handling)
+  views/            # Frontend routes
+  templates/        # Jinja2 templates
+  static/           # CSS, JS, uploads
+  sockets/          # WebSocket event handlers
+```
+
+## License
+
+See LICENSE file for details.
 

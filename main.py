@@ -19,5 +19,6 @@ if __name__ == "__main__":
     else:
         # Production mode: run with gunicorn (CLI command)
         # This block won't execute in production as gunicorn handles it
-        print("Running in production mode. Use gunicorn to start the server.")
-        print("Example: gunicorn -k eventlet -w 1 main:app --bind 0.0.0.0:5001")
+        import sys
+        sys.stderr.write("Running in production mode. Use gunicorn to start the server.\n")
+        sys.stderr.write("Example: gunicorn -k eventlet -w 1 main:app --bind 0.0.0.0:${PORT:-5001}\n")

@@ -1,15 +1,11 @@
-import sys
-import os
 import random
 import string
 from datetime import datetime, timedelta
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from faker import Faker
 from dotenv import load_dotenv
 
-from app import create_app,db # db here is -> db = SQLAlchemy()
+from app import create_app, db
 from app.models import Person, Company, Job, JobApplication, Room, Message, Notifications
 
 

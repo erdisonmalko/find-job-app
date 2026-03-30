@@ -25,7 +25,6 @@ def new_room():
         errors = validate_new_room_data(request.form)
         if errors:
             for error in errors:
-                print(f"error is: {error}")
                 flash(error, "warning")
             return jsonify({"success": False, "message": "Validation errors"})
 
@@ -139,7 +138,7 @@ def delete_room():
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"Error deleting job. Error:{e}")
-        flash(f"Error deleting job","warning")
+        flash("Error deleting job","warning")
     
     return redirect(url_for("frontend.rooms"))
 
@@ -167,7 +166,7 @@ def rename_room():
             flash("Room not found","danger")
             return redirect(request.referrer or url_for('frontend.rooms'))
         else:
-            print(f"Room name found on DB: {room_to_rename}")
+            current_app.logger.debug(f"Room found: {room_to_rename.name}. Attempting rename to: {room_name}")
             # in case user is trying to update the same name - allow it, 
             # but make sure name does not belong to other room
             if room_name.strip() != room_to_rename.name:

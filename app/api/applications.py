@@ -107,7 +107,7 @@ def list_applications(job_id):
         })
 
     except Exception as e:
-        print("Error fetching applications:", str(e))
+        current_app.logger.error("Error fetching applications:", str(e))
         return jsonify({"error": "Error fetching applications"}), 500
 
 

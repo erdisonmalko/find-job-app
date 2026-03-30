@@ -3,7 +3,6 @@ from datetime import datetime, date
 from flask_login import UserMixin
 from sqlalchemy import DateTime
 from sqlalchemy import JSON
-from sqlalchemy.dialects.mysql import LONGTEXT
 # local
 from app import db
 
@@ -84,7 +83,7 @@ class Company(User):
     __tablename__ = 'companies'
 
     id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    description = db.Column(LONGTEXT)
+    description = db.Column(db.Text)
     social_links = db.Column(JSON)
     # Relationship for jobs
     jobs = db.relationship('Job',
@@ -141,7 +140,7 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer,
                          db.ForeignKey('users.id', ondelete='CASCADE'),
                          nullable=False)
-    message = db.Column(LONGTEXT)
+    message = db.Column(db.Text)
     created_at = db.Column(DateTime, default=datetime.now)
     updated_at = db.Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
@@ -163,7 +162,7 @@ class Job(db.Model):
                           db.ForeignKey('companies.id', ondelete='CASCADE'),
                           nullable=False)
     title = db.Column(db.String(100))
-    description = db.Column(LONGTEXT)
+    description = db.Column(db.Text)
     location = db.Column(db.String(100))
     salary = db.Column(db.String(100))
     created_at = db.Column(DateTime, default=datetime.now)
@@ -209,7 +208,7 @@ class Notifications(db.Model):
 
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     receiver_id = db.Column(db.Integer, nullable=False) # Can be a user or a company
-    message = db.Column(LONGTEXT)  # MySQL LONGTEXT for large messages
+    message = db.Column(db.Text)  # Large text for messages
     read = db.Column(db.Boolean, default=False)
     created_at = db.Column(DateTime, default=datetime.now)
     updated_at = db.Column(DateTime, default=datetime.now, onupdate=datetime.now)

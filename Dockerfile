@@ -28,4 +28,5 @@ COPY . /jobfind
 EXPOSE 5001
 
 # Run with gunicorn (production)
-CMD ["gunicorn", "-k", "eventlet", "-w", "1", "main:app", "--bind", "0.0.0.0:${PORT:-5001}", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]
+# Use shell form to allow environment variable expansion
+CMD gunicorn -k eventlet -w 1 main:app --bind 0.0.0.0:${PORT:-5001} --timeout 120 --access-logfile - --error-logfile -

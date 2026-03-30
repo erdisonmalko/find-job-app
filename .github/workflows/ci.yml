@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install ruff
+        run: pip install ruff
+      
+      - name: Lint with ruff
+        run: ruff check app/ --show-settings
+  
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+          pip install -r requirements-test.txt
+      
+      - name: Run unit tests
+        run: pytest tests/ -m unit -v --cov=app --cov-report=xml
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+  
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: test_job_app
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: jobappuser
+          MYSQL_PASSWORD: jobapppass
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        ports:
+          - 3306:3306
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+          pip install -r requirements-test.txt
+      
+      - name: Run integration tests
+        env:
+          FLASK_ENV: testing
+          SQLALCHEMY_DATABASE_URI: mysql+pymysql://jobappuser:jobapppass@localhost:3306/test_job_app
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test-secret-key
+          MAIL_SERVER: smtp.mailtrap.io
+          MAIL_PORT: 465
+          MAIL_USERNAME: test
+          MAIL_PASSWORD: test
+          ADMIN_EMAIL: admin@test.com
+          SECURITY_PASSWORD_SALT: test-salt
+        run: pytest tests/integration/ -v --cov=app --cov-report=xml --cov-append
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false

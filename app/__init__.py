@@ -19,8 +19,12 @@ def create_app(config_name='default'):
     
     app.config.from_object(config_by_name[config_name])
 
-    # Configure Redis for production
-    if not app.debug:
+    # Configure Redis for production (skip for testing and development)
+    if app.config.get('TESTING'):
+        # Testing: in-memory, no Redis
+        limiter.init_app(app)
+        socketio.init_app(app)
+    elif not app.debug:
         # Production: use Redis
         redis_url = app.config.get('REDIS_URL', 'redis://localhost:6379/0')
         limiter.init_app(app, storage_uri=f"{redis_url}/limiter")
@@ -62,7 +66,6 @@ def create_app(config_name='default'):
     
     # Initialize database with connection retry
     with app.app_context():
-        from .models import User, Person, Company, Job, JobApplication, Room, Message
         
         max_retries = 5
         retry_count = 0

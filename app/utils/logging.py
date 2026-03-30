@@ -6,6 +6,11 @@ from logging.handlers import RotatingFileHandler
 from flask import has_request_context, request
 
 def setup_logger(app):
+    # Skip logging setup during testing
+    if app.config.get('TESTING'):
+        app.logger.setLevel(logging.DEBUG)
+        return app.logger
+    
     # Create logs directory if it doesn't exist
     if not os.path.exists('logs'):
         os.makedirs('logs')
