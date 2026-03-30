@@ -2,7 +2,7 @@
 
 A full-stack job marketplace platform with real-time messaging and application management. Built with Flask, SQLAlchemy, WebSockets, and Docker.
 
-Live Demo: [https://your-railway-url.railway.app](https://your-railway-url.railway.app)
+Live Demo: [comming soon...](https://url.railway.app)
 
 ## Overview
 
