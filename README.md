@@ -14,7 +14,7 @@ To set up the project locally using Docker, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Soni912108/JobFind.git
+   git clone https://github.com/erdisonmalko/find-job-app.git
    ```
 2. Navigate to the project directory:
    ```bash
