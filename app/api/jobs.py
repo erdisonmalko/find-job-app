@@ -172,7 +172,6 @@ def delete_job():
 
     # make sure job exists and belongs to the current company
     job = Job.query.filter_by(company_id=current_user.id, id=job_id).first()
-    print(f"Job to delete: ID={job.id}, Title={job.title}, Description={job.description}, Location={job.location}")
     if not job:
         flash("Can not delete this job - either not under this company or does not exist", "danger")
         return redirect(url_for('frontend.jobs'))
