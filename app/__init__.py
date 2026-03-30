@@ -66,7 +66,6 @@ def create_app(config_name='default'):
     
     # Initialize database with connection retry
     with app.app_context():
-        from .models import User, Person, Company, Job, JobApplication, Room, Message
         
         max_retries = 5
         retry_count = 0

@@ -138,7 +138,7 @@ def delete_room():
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"Error deleting job. Error:{e}")
-        flash(f"Error deleting job","warning")
+        flash("Error deleting job","warning")
     
     return redirect(url_for("frontend.rooms"))
 

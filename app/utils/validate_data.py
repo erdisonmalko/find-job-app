@@ -1,5 +1,4 @@
 import re
-import functools
 
 from app.models import User, Company,Room,Message
 
@@ -229,6 +228,6 @@ def create_new_message(room_id, sender_id, message_text,db=None):
         db.session.commit()
         return message
     
-    except Exception as db_error:
+    except Exception:
         db.session.rollback()
         raise

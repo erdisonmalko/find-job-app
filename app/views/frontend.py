@@ -12,7 +12,7 @@ from app.models import (
     JobApplication, Room, Notifications,ContactMessage
 )
 from app import db
-from app.utils.send_mail import send_contact_email, generate_token,confirm_token, send_email
+from app.utils.send_mail import send_contact_email, generate_token,send_email
 from app.utils.validate_data import (validate_register_data, validate_login_data, is_form_empty,
                                    validate_register_company_data, validate_register_user_data)
 

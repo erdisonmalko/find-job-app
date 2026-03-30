@@ -81,7 +81,7 @@ def handle_join_notifications(data):
         current_app.logger.info(f"User {user_id} ({user_type}) joined notification room: {notification_room}")
         
         # Optionally send confirmation
-        return {"status": "success", "message": f"Joined notification room"}
+        return {"status": "success", "message": "Joined notification room"}
         
     except Exception as e:
         current_app.logger.error(f"Error in handle_join_notifications: {str(e)}")
