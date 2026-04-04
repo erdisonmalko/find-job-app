@@ -1,66 +1,294 @@
 {% block head %}
 <style>
-    /* Footer styles */
+    /* Footer Styles */
     .footer {
-            background: #f8f9fa;
-            color: var(--secondary-color);
-        }
-
-    .footer h5 {
-        color: var(--primary-color);
-        margin-bottom: 1.5rem;
+        background: linear-gradient(to bottom, #FAFBFC 0%, #F8F9FB 100%);
+        color: var(--text-secondary, #5A5A5A);
+        border-top: 1px solid var(--border-color, #E5E8EB);
+        position: relative;
+        overflow: hidden;
     }
 
-    .footer a {
-        color: var(--secondary-color);
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            var(--primary-color, #2A4A7F) 50%, 
+            transparent 100%);
+        opacity: 0.3;
+    }
+
+    .footer-content {
+        padding: 4rem 0 2rem;
+    }
+
+    .footer h5 {
+        font-family: 'Playfair Display', serif;
+        color: var(--primary-color, #2A4A7F);
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    .footer p {
+        line-height: 1.7;
+        color: var(--text-secondary, #5A5A5A);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: var(--text-secondary, #5A5A5A);
         text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .footer-links a::before {
+        content: '→';
+        opacity: 0;
+        margin-right: 0;
+        transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-color, #2A4A7F);
+        transform: translateX(5px);
+    }
+
+    .footer-links a:hover::before {
+        opacity: 1;
+        margin-right: 0.5rem;
+    }
+
+    .contact-info {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .contact-info li {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        color: var(--text-secondary, #5A5A5A);
+        font-size: 0.95rem;
+    }
+
+    .contact-info i {
+        color: var(--accent-color, #E67E22);
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: white;
+        border: 2px solid var(--border-color, #E5E8EB);
+        color: var(--text-secondary, #5A5A5A);
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .social-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, var(--primary-color, #2A4A7F), var(--accent-color, #E67E22));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .social-link i {
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(42, 74, 127, 0.2);
+        border-color: transparent;
+    }
+
+    .social-link:hover::before {
+        opacity: 1;
+    }
+
+    .social-link:hover i {
+        color: white;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid var(--border-color, #E5E8EB);
+        padding: 2rem 0;
+        margin-top: 3rem;
+    }
+
+    .footer-bottom-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .copyright {
+        color: var(--text-secondary, #5A5A5A);
+        font-size: 0.9rem;
+    }
+
+    .footer-brand {
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        color: var(--primary-color, #2A4A7F);
+        font-size: 1.1rem;
+        letter-spacing: -0.01em;
+    }
+
+    .footer-bottom-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-bottom-links a {
+        color: var(--text-secondary, #5A5A5A);
+        text-decoration: none;
+        font-size: 0.9rem;
         transition: color 0.3s ease;
     }
 
-    .footer a:hover {
-        color: var(--primary-color);
+    .footer-bottom-links a:hover {
+        color: var(--primary-color, #2A4A7F);
     }
 
-    .footer .fab {
-        font-size: 1.5rem;
+    /* Responsive */
+    @media (max-width: 768px) {
+        .footer-content {
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-bottom-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-bottom-links {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .social-links {
+            justify-content: center;
+        }
     }
 </style>
 {% endblock %}
 
-
 {% block body %}
     <footer class="footer">
         <div class="container">
-            <div class="row py-5">
-                <div class="col-md-4 mb-4">
-                    <h5>About JobFind</h5>
-                    <p>Connecting professionals with their dream careers and helping companies find the perfect talent.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="/privacy">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Contact Us</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-envelope me-2"></i> contact@jobfind.com</li>
-                        <li><i class="fas fa-phone me-2"></i> (555) 123-4567</li>
-                        <li class="mt-3">
-                            <a href="#" class="me-2"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="me-2"><i class="fab fa-linkedin"></i></a>
-                        </li>
-                    </ul>
+            <div class="footer-content">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <h5>About JobFind</h5>
+                        <p>Connecting exceptional professionals with visionary companies. Building careers, growing teams, and creating meaningful impact in the world of work.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <h5>Quick Links</h5>
+                        <ul class="footer-links">
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/terms">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <h5>Get in Touch</h5>
+                        <ul class="contact-info">
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>contact@jobfind.com</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <span>(555) 123-4567</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>San Francisco, CA</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="row border-top py-3">
-                <div class="text-center p-3 text-dark w-100 bottom-0">
-                    &copy; <span id="current-year"></span> JobFind
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        &copy; <span id="current-year"></span> <span class="footer-brand">JobFind</span>. All rights reserved.
+                    </div>
+                    <ul class="footer-bottom-links">
+                        <li><a href="/privacy">Privacy</a></li>
+                        <li><a href="/terms">Terms</a></li>
+                        <li><a href="/cookies">Cookies</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

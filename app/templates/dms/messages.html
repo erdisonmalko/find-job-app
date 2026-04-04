@@ -99,98 +99,100 @@ Messages
     </div>
 </div>
 
+
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var socket = io(window.location.origin);
-    const messagesContainer = document.getElementById('messages-container');
-    const messageForm = document.getElementById('message-form');
-    const messageInput = document.getElementById('message-input');
-    const roomId = "{{ room.id }}";
-    const currentUserId = {{ current_user.id }};
-
-    // Join the room
-    socket.emit('join', { room: roomId });
-
-    function createMessageElement(data, isCurrentUser) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message-bubble mb-2 ${isCurrentUser ? 'sent' : 'received'}`;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Use the global socket instance
+        const socket = window.socket;
         
-        const sanitizeHTML = str => {
-            const temp = document.createElement('div');
-            temp.textContent = str;
-            return temp.innerHTML;
-        };
-        
-        messageDiv.innerHTML = `
+        if (!socket) {
+            console.error('Socket not initialized!');
+            return;
+        }
+
+        const messagesContainer = document.getElementById('messages-container');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const roomId = "{{ room.id }}";
+        const currentUserId = {{ current_user.id }};
+
+        // Remove any existing 'new message' listener to prevent duplicates
+        socket.off('new message');
+
+        // Join the room
+        socket.emit('join', { room: roomId });
+        console.log('Joined room:', roomId);
+
+        function createMessageElement(data, isCurrentUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-bubble mb-2 ${isCurrentUser ? 'sent' : 'received'}`;
+            
+            const sanitizeHTML = str => {
+                const temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            };
+            
+            messageDiv.innerHTML = `
                 <small class="text-muted">${sanitizeHTML(data.sender_name)}</small>
                 <div class="message-content">
                     ${sanitizeHTML(data.message)}
                 </div>
                 <small class="text-muted">${new Date(data.created_at).toLocaleTimeString()}</small>
             `;
-        return messageDiv;
-    }
+            return messageDiv;
+        }
 
-    function scrollToBottom() {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-    scrollToBottom();
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        scrollToBottom();
 
-    messageForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const message = messageInput.value.trim();
-        if (message) {
-            console.log('Sending message:', { room_id: roomId, message: message });
-            // Append the message locally immediately:
-            const localMsg = {
-                sender_id: currentUserId,
-                sender_name: '{{ user.name }}',
-                message: message,
-                created_at: new Date().toISOString()
-            };
-            const messageElement = createMessageElement(localMsg, true);
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message) {
+                console.log('Sending message:', { room_id: roomId, message: message });
+                
+                // Append the message locally immediately
+                const localMsg = {
+                    sender_id: currentUserId,
+                    sender_name: '{{ user.name }}',
+                    message: message,
+                    created_at: new Date().toISOString()
+                };
+                const messageElement = createMessageElement(localMsg, true);
+                messagesContainer.appendChild(messageElement);
+                scrollToBottom();
+                
+                // Emit the message to the server
+                socket.emit('new message', {
+                    room_id: roomId,
+                    message: message
+                });
+                
+                messageInput.value = '';
+            }
+        });
+
+        // Listen for new messages from other users
+        socket.on('new message', function(data) {
+            console.log('Received new message:', data);
+            
+            // Skip if it's from the current user (should be handled by server, but double-check)
+            if (data.sender_id === currentUserId) {
+                console.log('Skipping own message');
+                return;
+            }
+            
+            const messageElement = createMessageElement(data, false);
             messagesContainer.appendChild(messageElement);
             scrollToBottom();
-            
-            // Emit the message to the server.
-            socket.emit('new message', {
-                room_id: roomId,
-                message: message
-            });
-            
-            messageInput.value = '';
-        }
-    });
+        });
 
-    socket.on('connect', () => {
-        console.log('Socket connected successfully on messages page');
+        console.log('Messages page socket listeners initialized');
     });
-
-    socket.on('disconnect', () => {
-        console.log('Socket disconnected on messages page');
-    });
-
-    // Add the new message listener only once (remove duplicates if needed)
-    socket.off('new message');
-    socket.on('new message', function(data) {
-        // If by any chance, the event arrives for the current user, skip it
-        if (data.sender_id === currentUserId) return;
-        console.log('Received new message:', data);
-        const messageElement = createMessageElement(data, false);
-        messagesContainer.appendChild(messageElement);
-        scrollToBottom();
-    });
-
-    socket.on('error', (error) => {
-        console.error('Socket error on messages page:', error);
-    });
-
-    socket.on('connect_error', (error) => {
-        console.error('Connection error on messages page:', error);
-    });
-});
-
 </script>
 {% endblock %}
 <!-- end of the block body -->

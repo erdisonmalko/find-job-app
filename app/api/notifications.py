@@ -12,11 +12,14 @@ notifications_bp = Blueprint("notifications",__name__)
 
 # mark a single notification as read
 @notifications_bp.route("/notification/mark_read/<int:notification_id>", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("100 per minute")
 @login_required
 def mark_notification_read(notification_id):
-    notification = Notifications.query.get(notification_id)
-    if notification and notification.receiver_id == current_user.id:
+    notification = Notifications.query.filter_by(
+        id=notification_id, receiver_id=current_user.id, read=False
+        ).first()
+    
+    if notification and notification.receiver_id == current_user.id and not notification.read:
         notification.read = True
         db.session.commit()
         # log
@@ -27,22 +30,30 @@ def mark_notification_read(notification_id):
 
 # mark all user's notifications as read
 @notifications_bp.route("/notification/mark_all_read", methods=["POST"])
-@limiter.limit("1 per minute")
+@limiter.limit("100 per minute")
 @login_required
 def mark_all_read():
-    all_current_user_notifications = Notifications.query.filter_by(receiver_id=current_user.id).all()
-    for notification in all_current_user_notifications:
-        notification.read = True
-        db.session.commit()
-        # log
-        current_app.logger.info(f"Notifications for user: {current_user.name} mark as read")
-        return jsonify({"message": "Notifications mark as read"}),200
+    # Bulk update in a single query
+    updated_count = Notifications.query.filter_by(
+        receiver_id=current_user.id, 
+        read=False
+    ).update({"read": True})
     
-    return jsonify({"error": "No notifications found"}), 404
+    db.session.commit()
+    
+    if updated_count > 0:
+        current_app.logger.info(
+            f"{updated_count} notifications for user {current_user.name} marked as read"
+        )
+        return jsonify({
+            "message": f"{updated_count} notifications marked as read"
+        }), 200
+    
+    return jsonify({"error": "No unread notifications found"}), 404
 
 # delete a notification
 @notifications_bp.route("/notification/delete/<int:notification_id>", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("100 per minute")
 @login_required
 def delete_notification(notification_id):
     notification = Notifications.query.get(notification_id)

@@ -14,7 +14,7 @@ jobs_bp = Blueprint("jobs", __name__)
 
 # Create a new job
 @jobs_bp.route("/job/create", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def create_job():
     try:
@@ -78,7 +78,7 @@ def job_detail(job_id):
 
 # Update job
 @jobs_bp.route("/job/update/", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def update_job():
     # Check if current user is a company
@@ -126,7 +126,7 @@ def update_job():
 
 # deactivate job
 @jobs_bp.route("/job/deactivate/<int:job_id>", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def deactivate_job(job_id):
     # Check if current user is a company
@@ -162,7 +162,7 @@ def deactivate_job(job_id):
 
 # delete job
 @jobs_bp.route("/job/delete/", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def delete_job():
     job_id = request.form.get("jobId")
@@ -190,7 +190,7 @@ def delete_job():
 
 # Apply for a job
 @jobs_bp.route("/job/apply/<int:job_id>", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def apply_job(job_id):
     # Check if job exists
