@@ -19,7 +19,7 @@ applications_bp = Blueprint("applications", __name__)
 # here will create the api to crud applications
 
 @applications_bp.route("/application/delete/", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("20 per minute")
 @login_required
 def delete_application():
     application_id = request.form.get('applicationId')
@@ -72,7 +72,7 @@ def download_resume(application_id, file_name):
 
 
 @applications_bp.route("/application/list/<int:job_id>", methods=["GET"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def list_applications(job_id):
     # Check if user is a Company and owns the job
@@ -114,7 +114,7 @@ def list_applications(job_id):
 
 
 @applications_bp.route("/application/detail/<int:application_id>", methods=["GET"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def application_detail(application_id):
     try:
@@ -176,7 +176,7 @@ def application_detail(application_id):
 
 # Update a job application status(ONLY FOR COMPANIES)
 @applications_bp.route("/application/update_status", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit("30 per minute")
 @login_required
 def update_status():
     # Verify the current user is a Company
@@ -234,59 +234,3 @@ def update_status():
         flash("Error updating application status", "danger")
     
     return redirect(url_for('frontend.applicants'))
-
-
-
-# ------------------------------------------------------------------------
-
-#NOT NEEDED - TOO COMPLICATED TO HANDLE
-# @applications_bp.route("/application/update/", methods=["POST"])
-# @login_required
-# def update_application():
-#     print(f"Request form on update application: {request.form}")
-#     print(f"Request files on update application: {request.files}")
-    
-#     if not isinstance(current_user, Person) or not current_user.can_apply_to_job():
-#         flash("Only Professionals can update applications", "danger")
-#         return redirect(url_for('frontend.applications_page'))
-
-#     application_id = request.form.get('applicationId')
-#     if not application_id:
-#         flash("An unexpected error occurred", "warning")
-#         return redirect(url_for('frontend.index'))
-
-#     application = JobApplication.query.filter_by(
-#         id=application_id,
-#         applicant_id=current_user.id
-#     ).first()
-
-#     if not application:
-#         flash("Application not found", "warning")
-#         return redirect(url_for('frontend.applications_page'))
-    
-#     try:
-#         if 'resume' in request.files:
-#             unique_filename, file_url = save_resume(request.files.get('resume'))
-#             print(f"Saved file as {unique_filename}, URL: {file_url}")
-#             if unique_filename:
-#                 application.resume_filename = unique_filename
-#             else:
-#                 flash("Error saving resume file", "danger")
-#                 return redirect(url_for('frontend.applications_page'))
-        
-#         application.updated_at = datetime.now()
-#         db.session.commit()
-#         flash("Application updated successfully", "success")
-#         return redirect(url_for('frontend.applications_page'))
-#     except Exception as e:
-#         db.session.rollback()
-#         print("Error updating application:", str(e))
-#         flash("Error updating application", "danger")
-
-#     return redirect(url_for('frontend.applications_page'))
-
-
-# @applications_bp.route("/application/upload_resume/<string:file_name>", methods=["POST"])
-# @login_required
-# def upload_resume(file_name):
-#     pass

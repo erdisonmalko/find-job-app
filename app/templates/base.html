@@ -95,15 +95,16 @@
 
     <!-- Modals -->
     {% block modals %}{% endblock %}
-
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
-        // Check if we're not on the messages page
+        // Always create a single global socket instance
+        window.socket = io(window.location.origin);
+        
+        // Only initialize notifications if NOT on messages page
         if (!window.location.pathname.includes('/messages/room/join/')) {
-            var socket = io(window.location.origin);
             
             function updateNotificationCounter() {
                 const counter = document.getElementById('notification-counter');
@@ -116,24 +117,24 @@
                     }
                 }
             }
-    
+
             // Initialize notification count from localStorage
             let unreadCount = parseInt(localStorage.getItem('unreadNotifications') || '0');
-    
+
             // Update counter on page load
             updateNotificationCounter();
-    
-            socket.on('connect', () => {
+
+            window.socket.on('connect', () => {
                 console.log('Socket connected successfully on base page');
                 // Join notifications room when connected
-                socket.emit('join_notifications', {
+                window.socket.emit('join_notifications', {
                     user_id: "{{ current_user.id }}",
                     user_type: '{{ session.get("user_type") }}'
                 });
             });
-    
+
             // Handle notifications
-            socket.on('new_notification', function(data) {
+            window.socket.on('new_notification', function(data) {
                 console.log('Received new notification:', data);
                 unreadCount++;
                 localStorage.setItem('unreadNotifications', unreadCount);
@@ -141,8 +142,6 @@
                 // Show toast notification
                 showToast(data.message || 'New notification received');
             });
-            //TO DO: listen for new rooms created where current user is part of(notify them for being added in a room)
-            //...
 
             // Reset counter when clicking notifications link
             const notificationLink = document.querySelector('a[href*="notifications"]');
@@ -153,16 +152,16 @@
                     updateNotificationCounter();
                 });
             }
-    
-            socket.on('disconnect', () => {
+
+            window.socket.on('disconnect', () => {
                 console.log('Socket disconnected on base page');
             });
-    
-            socket.on('error', (error) => {
+
+            window.socket.on('error', (error) => {
                 console.error('Socket error on base page:', error);
             });
         } else {
-            console.log('On messages page - skipping notification socket initialization');
+            console.log('On messages page - notification listeners will not be attached');
         }
 
         const backToTopButton = document.getElementById('back-to-top');

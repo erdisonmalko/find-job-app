@@ -1,45 +1,186 @@
 {% block head %}
 <style>
-    /* Navbar styles */
+    /* Navbar Styles */
     .main-navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-        }
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(229, 232, 235, 0.8);
+        padding: 1.2rem 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        .main-navbar .navbar-brand {
-            font-weight: 700;
-            color: var(--primary-color);
+    .main-navbar.scrolled {
+        padding: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand {
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        color: var(--primary-color, #2A4A7F) !important;
+        letter-spacing: -0.01em;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+        color: var(--primary-dark, #1D3357) !important;
+    }
+
+    .main-navbar .nav-link {
+        color: var(--text-secondary, #5A5A5A);
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin: 0 0.75rem;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.3s ease;
+        position: relative;
+        letter-spacing: 0.01em;
+    }
+
+    .main-navbar .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color, #2A4A7F);
+        transform: translateX(-50%);
+        transition: width 0.3s ease;
+    }
+
+    .main-navbar .nav-link:hover {
+        color: var(--primary-color, #2A4A7F);
+    }
+
+    .main-navbar .nav-link:hover::after {
+        width: 80%;
+    }
+
+    .nav-cta {
+        margin-left: 1rem;
+    }
+
+    .nav-cta .nav-link {
+        padding: 0.6rem 1.5rem !important;
+        border-radius: 10px;
+        margin: 0 0.25rem;
+        font-weight: 600;
+    }
+
+    .nav-link-signin {
+        color: var(--primary-color, #2A4A7F) !important;
+        background: transparent;
+        border: 2px solid var(--primary-color, #2A4A7F);
+    }
+
+    .nav-link-signin:hover {
+        background: var(--primary-color, #2A4A7F);
+        color: white !important;
+    }
+
+    .nav-link-signup {
+        background: var(--primary-color, #2A4A7F);
+        color: white !important;
+        border: 2px solid var(--primary-color, #2A4A7F);
+    }
+
+    .nav-link-signup:hover {
+        background: var(--primary-dark, #1D3357);
+        border-color: var(--primary-dark, #1D3357);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(42, 74, 127, 0.25);
+    }
+
+    .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+    .navbar-toggler-icon {
+        width: 24px;
+        height: 2px;
+        background: var(--primary-color, #2A4A7F);
+        display: block;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler-icon::before,
+    .navbar-toggler-icon::after {
+        content: '';
+        position: absolute;
+        width: 24px;
+        height: 2px;
+        background: var(--primary-color, #2A4A7F);
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler-icon::before {
+        top: -7px;
+    }
+
+    .navbar-toggler-icon::after {
+        bottom: -7px;
+    }
+
+    /* Mobile Menu */
+    @media (max-width: 991px) {
+        .navbar-collapse {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .main-navbar .nav-link {
-            color: var(--secondary-color);
-            margin: 0 0.5rem;
-            transition: color 0.3s ease;
+            margin: 0.5rem 0;
+            padding: 0.75rem 1rem !important;
         }
 
-        .main-navbar .nav-link:hover {
-            color: var(--primary-color);
+        .nav-cta {
+            margin-left: 0;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color, #E5E8EB);
         }
+
+        .nav-cta .nav-link {
+            display: block;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+    }
+
+    /* Smooth scroll offset for fixed navbar */
+    html {
+        scroll-padding-top: 100px;
+    }
 </style>
 {% endblock %}
-
 
 {% block body %}
     <nav class="main-navbar navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="/">JobFind</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item">
                         <a class="nav-link" href="#features">Features</a>
                     </li>
@@ -49,14 +190,37 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
-                    <li>
-                        <a href="/users/login" class="nav-link">Sign In</a>
+                    <li class="nav-item nav-cta">
+                        <a href="/users/login" class="nav-link nav-link-signin">Sign In</a>
                     </li>
-                    <li>
-                        <a href="/users/register" class="nav-link">Get Started</a>
+                    <li class="nav-item nav-cta">
+                        <a href="/users/register" class="nav-link nav-link-signup">Get Started</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.main-navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navbarCollapse = document.querySelector('.navbar-collapse');
+                if (navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                    bsCollapse.hide();
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -306,7 +306,9 @@ def notifications():
         error_out=False
     )
     notifications_list = notifications_pagination.items
-
+    # debug print to see how many are read and unread
+    for notification in notifications_list:
+        print(f"Notification id: {notification.id}, receiver_id: {notification.receiver_id}, read: {notification.read}")
     return render_template(
         "notifications/notifications.html",
         active="notifications", 

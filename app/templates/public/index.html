@@ -6,86 +6,226 @@
     <title>JobFind - Your Career Journey Starts Here</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
+            --primary-color: #2A4A7F;
+            --primary-light: #3D5F9C;
+            --primary-dark: #1D3357;
+            --accent-color: #E67E22;
+            --accent-light: #F39C12;
+            --text-primary: #1A1A1A;
+            --text-secondary: #5A5A5A;
+            --bg-light: #FAFBFC;
+            --bg-white: #FFFFFF;
+            --border-color: #E5E8EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Sora', sans-serif;
             overflow-x: hidden;
-            margin: 0;
-            padding: 0;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            line-height: 1.6;
         }
 
+        /* Hero Section */
         .hero-section {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(160deg, #F8F9FB 0%, #FAFBFC 50%, #FFFFFF 100%);
             position: relative;
             overflow: hidden;
-            z-index: 1;
+            padding-top: 100px;
         }
 
         .hero-section::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1') center/cover;
-            opacity: 0.1;
-            z-index: 0;
-            transform: translateZ(0);
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(42, 74, 127, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -15%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(230, 126, 34, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, 30px) scale(1.05); }
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            padding-top: 120px;
+            padding-top: 60px;
         }
 
         .brand-title {
-            font-size: 4rem;
-            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            font-weight: 900;
             color: var(--primary-color);
-            margin-bottom: 1rem;
-            animation: fadeInUp 1s ease;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            animation: fadeInUp 0.8s ease;
+            line-height: 1.1;
         }
 
         .tagline {
-            font-size: 1.5rem;
-            color: var(--secondary-color);
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            animation: fadeInUp 0.8s ease 0.1s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* User Type Cards */
+        .user-types {
+            margin-top: 4rem;
+            animation: fadeInUp 0.8s ease 0.2s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .user-type-card {
+            background: var(--bg-white);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            margin: 0 1rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-type-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .user-type-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 40px rgba(42, 74, 127, 0.15);
+        }
+
+        .user-type-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .user-type-card i {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-type-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .user-type-card p {
+            color: var(--text-secondary);
             margin-bottom: 2rem;
-            animation: fadeInUp 1s ease 0.2s;
-            opacity: 0;
-            animation-fill-mode: forwards;
+            font-size: 1rem;
+            line-height: 1.7;
         }
 
-        .cta-buttons {
-            animation: fadeInUp 1s ease 0.4s;
-            opacity: 0;
-            animation-fill-mode: forwards;
+        .user-type-card .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
+        /* Buttons */
         .cta-btn {
-            padding: 12px 30px;
-            border-radius: 50px;
+            padding: 14px 32px;
+            border-radius: 12px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 0 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            letter-spacing: 0.02em;
+            position: relative;
+            overflow: hidden;
         }
 
         .cta-primary {
             background: var(--primary-color);
             color: white;
-            border: none;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
         .cta-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(42, 74, 127, 0.25);
+        }
+
+        .cta-primary:hover::before {
+            left: 100%;
         }
 
         .cta-secondary {
@@ -97,106 +237,280 @@
         .cta-secondary:hover {
             background: var(--primary-color);
             color: white;
+            transform: translateY(-2px);
         }
 
-        .main-content {
-            position: relative;
-            z-index: 2;
-            background: white;
-            transform: translateZ(0);
-        }
-
+        /* Features Section */
         .features-section {
+            background: var(--bg-white);
+            padding: 120px 0;
             position: relative;
-            z-index: 2;
-            background: white;
-            padding: 80px 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .feature-card {
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
+            position: relative;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            background: var(--bg-white);
         }
 
         .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        .stats-section {
-            position: relative;
-            z-index: 2;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #0099ff 100%);
-            color: white;
-            padding: 60px 0;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .user-types {
-            margin-top: 3rem;
-            animation: fadeInUp 1s ease 0.6s;
-            opacity: 0;
-            animation-fill-mode: forwards;
-        }
-
-        .user-type-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 0 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .user-type-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .user-type-card i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-        }
-
-        .user-type-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .user-type-card p {
-            color: var(--secondary-color);
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1.5rem;
         }
 
-        .user-type-card .btn {
-            margin: 0.5rem;
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.4;
+        }
+
+        .stat-item {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #FFFFFF, rgba(255,255,255,0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 120px 0;
+            background: var(--bg-light);
+        }
+
+        .about-section .section-title {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-section .lead {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-section p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .feature-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-check:hover {
+            transform: translateX(5px);
+        }
+
+        .feature-check i {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .feature-check span {
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .about-section img {
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            width: 100%;
+            height: auto;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--bg-white);
+            padding: 100px 0;
+        }
+
+        .contact-section .section-title {
+            margin-bottom: 1rem;
+        }
+
+        .contact-section .lead {
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .contact-btn {
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.3);
+        }
+
+        .contact-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(42, 74, 127, 0.1);
+            outline: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .brand-title {
+                font-size: 3.5rem;
+            }
+
+            .tagline {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .user-type-card {
+                margin: 0 0 1.5rem 0;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
@@ -206,27 +520,31 @@
     <section class="hero-section">
         <div class="container hero-content text-center">
             <h1 class="brand-title">JobFind</h1>
-            <p class="tagline">Your Journey to Professional Success Starts Here</p>
+            <p class="tagline">Where exceptional talent meets visionary companies</p>
             
-            <!-- Add user type description -->
-            <div class="user-types mb-4">
+            <!-- User Type Cards -->
+            <div class="user-types">
                 <div class="row justify-content-center">
-                    <div class="col-md-5 user-type-card professional mb-3">
-                        <i class="fas fa-user-tie mb-3"></i>
-                        <h3>Professionals</h3>
-                        <p>Find your dream job and connect with top companies in your field</p>
-                        <div class="mt-3">
-                            <a href="/users/login?type=Person" class="btn cta-btn cta-primary btn-sm">Login as Professional</a>
-                            <a href="/users/register?type=Person" class="btn cta-btn cta-secondary btn-sm">Register as Professional</a>
+                    <div class="col-md-5">
+                        <div class="user-type-card">
+                            <i class="fas fa-user-tie"></i>
+                            <h3>Professionals</h3>
+                            <p>Discover opportunities that align with your ambitions and connect with companies that value your expertise</p>
+                            <div class="btn-group">
+                                <a href="/users/login?type=Person" class="btn cta-btn cta-primary">Sign In</a>
+                                <a href="/users/register?type=Person" class="btn cta-btn cta-secondary">Create Account</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-5 user-type-card company mb-3">
-                        <i class="fas fa-building mb-3"></i>
-                        <h3>Companies</h3>
-                        <p>Find the best talent and grow your team with qualified professionals</p>
-                        <div class="mt-3">
-                            <a href="/users/login?type=Company" class="btn cta-btn cta-primary btn-sm">Login as Company</a>
-                            <a href="/users/register?type=Company" class="btn cta-btn cta-secondary btn-sm">Register as Company</a>
+                    <div class="col-md-5">
+                        <div class="user-type-card">
+                            <i class="fas fa-building"></i>
+                            <h3>Companies</h3>
+                            <p>Access a curated network of qualified professionals and build teams that drive innovation forward</p>
+                            <div class="btn-group">
+                                <a href="/users/login?type=Company" class="btn cta-btn cta-primary">Sign In</a>
+                                <a href="/users/register?type=Company" class="btn cta-btn cta-secondary">Get Started</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -234,95 +552,104 @@
         </div>
     </section>
 
-    <div class="main-content">
-        <!-- Features Section -->
-        <section class="features-section" id="features">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="feature-card text-center">
-                            <i class="fas fa-search feature-icon"></i>
-                            <h3>Smart Job Matching</h3>
-                            <p>Our AI-powered system matches you with the perfect opportunities based on your skills and preferences.</p>
-                        </div>
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Built for Success</h2>
+                <p class="section-subtitle">Every feature designed to accelerate your career or build your dream team</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <i class="fas fa-brain feature-icon"></i>
+                        <h3>Intelligent Matching</h3>
+                        <p>Our advanced algorithms connect the right talent with the right opportunities, ensuring meaningful matches that drive results.</p>
                     </div>
-                    <div class="col-md-4">
-                        <div class="feature-card text-center">
-                            <i class="fas fa-users feature-icon"></i>
-                            <h3>Professional Network</h3>
-                            <p>Connect with industry leaders and like-minded professionals to expand your career opportunities.</p>
-                        </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <i class="fas fa-network-wired feature-icon"></i>
+                        <h3>Professional Networking</h3>
+                        <p>Build authentic connections with industry leaders and innovative companies in a trusted environment.</p>
                     </div>
-                    <div class="col-md-4">
-                        <div class="feature-card text-center">
-                            <i class="fas fa-rocket feature-icon"></i>
-                            <h3>Career Growth</h3>
-                            <p>Access resources and tools to help you grow in your professional journey.</p>
-                        </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <i class="fas fa-chart-line feature-icon"></i>
+                        <h3>Career Analytics</h3>
+                        <p>Track applications, monitor engagement, and gain insights that help you make informed career decisions.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="container">
-                <div class="row text-center">
-                    <div class="col-md-4">
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="stat-item">
                         <div class="stat-number">500+</div>
-                        <div class="stat-label">Companies</div>
+                        <div class="stat-label">Partner Companies</div>
                     </div>
-                    <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item">
                         <div class="stat-number">10,000+</div>
-                        <div class="stat-label">Active Jobs</div>
+                        <div class="stat-label">Active Opportunities</div>
                     </div>
-                    <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-item">
                         <div class="stat-number">50,000+</div>
-                        <div class="stat-label">Happy Professionals</div>
+                        <div class="stat-label">Success Stories</div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
     <!-- About Section -->
-    <section id="about" class="about-section py-5">
+    <section id="about" class="about-section">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 mb-4">
-                    <h2 class="section-title">About JobFind</h2>
-                    <p class="lead">Revolutionizing the way professionals and companies connect.</p>
-                    <p>JobFind is a cutting-edge platform designed to bridge the gap between talented professionals and innovative companies. Our mission is to create meaningful connections that drive careers and business growth forward.</p>
+                    <h2 class="section-title">Redefining Professional Connection</h2>
+                    <p class="lead">More than a job board—a platform built on trust, quality, and meaningful outcomes.</p>
+                    <p>JobFind bridges the gap between exceptional talent and forward-thinking companies. We believe that the best career moves happen when transparency meets opportunity, and when both professionals and employers have the tools to make confident decisions.</p>
                     <div class="mt-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <span>Advanced matching algorithms</span>
+                        <div class="feature-check">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Verified company profiles and opportunities</span>
                         </div>
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <span>Secure and private communications</span>
+                        <div class="feature-check">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Secure messaging and application tracking</span>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <span>Professional network growth</span>
+                        <div class="feature-check">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Real-time notifications and updates</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" alt="Team collaboration" class="img-fluid rounded shadow">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Professional collaboration" class="img-fluid">
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contact" class="contact-section py-5 bg-light">
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-8 text-center mb-5">
-                    <h2 class="section-title">Get in Touch</h2>
-                    <p class="lead">Have questions? We'd love to hear from you.</p>
-                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
-                        Contact Us <i class="fas fa-envelope ms-2"></i>
+                <div class="col-md-8 text-center">
+                    <h2 class="section-title">Let's Connect</h2>
+                    <p class="lead">Questions about how JobFind can help you? We're here to help.</p>
+                    <button class="btn contact-btn" data-bs-toggle="modal" data-bs-target="#contactModal">
+                        Get in Touch <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -332,33 +659,37 @@
     <!-- Footer -->
     {% include 'public/public_footer.html' %}
 
-    <!-- Add this modal at the bottom of the body, before scripts -->
-    <div class="modal fade" id="contactModal" tabindex="-1">
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Send us a Message</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="contactForm" action="{{ url_for('frontend.contact_post') }}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <form id="contactForm" action="{{ url_for('frontend.contact_post') }}" method="post" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="invalid-feedback">Please provide your name.</div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="invalid-feedback">Please provide a valid email.</div>
                         </div>
                         <div class="mb-3">
                             <label for="subject" class="form-label">Subject</label>
                             <input type="text" class="form-control" id="subject" name="subject" required>
+                            <div class="invalid-feedback">Please provide a subject.</div>
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
                             <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            <div class="invalid-feedback">Please provide a message.</div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                        <button type="submit" class="btn cta-btn cta-primary w-100">Send Message</button>
                     </form>
                 </div>
             </div>
@@ -368,16 +699,23 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Contact Form Submission
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const form = this;
-            const formData = new FormData(form);
             
-            // Disable form while submitting
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+            
+            const formData = new FormData(form);
             const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
             submitButton.disabled = true;
-            submitButton.innerHTML = 'Sending...';
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
             
             fetch(form.action, {
                 method: 'POST',
@@ -385,24 +723,21 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Create alert element
                 const alert = document.createElement('div');
                 alert.className = `alert alert-${data.status} alert-dismissible fade show mt-3`;
                 alert.innerHTML = `
                     ${data.message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 `;
                 
-                // Clear any existing alerts
                 const existingAlerts = form.querySelectorAll('.alert');
                 existingAlerts.forEach(alert => alert.remove());
                 
-                // Add new alert
                 form.insertBefore(alert, form.firstChild);
                 
-                // If success, clear the form
                 if (data.status === 'success') {
                     form.reset();
+                    form.classList.remove('was-validated');
                 }
             })
             .catch(error => {
@@ -411,18 +746,17 @@
                 alert.className = 'alert alert-danger alert-dismissible fade show mt-3';
                 alert.innerHTML = `
                     An unexpected error occurred. Please try again later.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 `;
                 form.insertBefore(alert, form.firstChild);
             })
             .finally(() => {
-                // Re-enable submit button
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'Send Message';
+                submitButton.innerHTML = originalText;
             });
         });
 
-        // Add this right after your existing form submit event listener
+        // Form Validation
         const forms = document.querySelectorAll('.needs-validation');
         forms.forEach(form => {
             form.addEventListener('submit', event => {

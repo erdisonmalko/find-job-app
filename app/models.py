@@ -235,15 +235,3 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
     is_read = db.Column(db.Boolean, default=False)
-
-
-    
-class SimpleRepr(object):
-    """A mixin implementing a simple __repr__."""
-    def __repr__(self):
-        return "<{klass} @{id:x} {attrs}>".format(
-            klass=self.__class__.__name__,
-            id=id(self) & 0xFFFFFF,
-            attrs=" ".join("{}={!r}".format(k, v) for k, v in self.__dict__.items()),
-            )
-    
